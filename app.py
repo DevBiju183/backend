@@ -1,8 +1,10 @@
 import math
 import requests
 from flask import Flask, request, jsonify
+import os
 
 app = Flask(__name__)
+
 # Storage for map data
 shelters = []
 volunteers = []
@@ -76,7 +78,7 @@ def request_aid():
         print("Missing data fields!")
         return jsonify({"error": "Missing data"}), 400
 
-    location = str(lat) + "," + str(lon)
+    location = f"{lat},{lon}"
 
     aid.append({
         "name": name,
@@ -142,5 +144,7 @@ def get_all_entries():
 
     return jsonify(combined), 200
 
+# Run the app using Railway's port or default 5000
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
